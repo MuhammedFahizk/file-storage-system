@@ -8,6 +8,7 @@ import {
   LuUpload,
   LuSettings,
 } from "react-icons/lu";
+import { CreateButton } from "../common/CreateButton";
 
 export const SideBar = () => {
   const menuItems = [
@@ -40,7 +41,9 @@ export const SideBar = () => {
 
   return (
     <div className="hs-overlay-body-open:overflow-hidden">
+      <CreateButton/>
       {/* Sidebar */}
+      
       <div
         id="hs-sidebar-content-push"
         className="hs-overlay [--auto-close:lg] lg:block lg:translate-x-0 lg:end-auto lg:bottom-0 w-64

@@ -7,6 +7,7 @@ import { Navbar } from "./components/Layout/Navbar";
 import { SideBar } from "./components/Layout/Sidebar";
 import useProfile from "./hooks/useProfile";
 import { useSelector } from "react-redux";
+import { CreateButton } from "./components/common/CreateButton";
 
 const Home = () => {
   // const { profile, loading, error } = useProfile();
@@ -37,7 +38,8 @@ const Home = () => {
         </header>
 
         <main className="flex-1 w-full h-[calc(100vh-64px)] overflow-y-auto p-6 bg-white dark:bg-neutral-900 rounded-xl shadow-inner">
-          
+                <CreateButton/>
+
         </main>
       </div>
     </div>

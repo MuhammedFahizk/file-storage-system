@@ -17,6 +17,7 @@ const userSlice = createSlice({
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.profile = action.payload;
+        state.error = null;
       })
       .addCase(fetchUserProfile.rejected, (state, action) => {
         state.status = "failed";

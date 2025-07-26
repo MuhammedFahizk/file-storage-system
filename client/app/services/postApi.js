@@ -94,3 +94,45 @@ export const logoutEveryDevice = async () => {
 
 
 
+/**
+ * Create Folder API
+ * @param {object} data - Folder data
+ * @param {string} data.name - Name of the folder
+ */
+export const createFolder = async (data) => {
+  try {
+    const response = await apiInstance.post("/folder/createFolder", data);
+    console.log("Folder created:", response);
+    return response;
+  } catch (error) {
+    console.error("Create folder error:", error);
+    throw error.response ? error.response.data : new Error(error.message);
+  }
+};
+
+
+/**
+ * Create File API
+ * @param {object} data - File data
+ * @param {string} data.name - Name of the file
+ * @param {string} data.content - File content (optional)
+ * @param {string} data.folderId - ID of the folder to place the file in (optional)
+ */
+export const createFile = async (data) => {
+  console.log('data',data);
+  try {
+    
+    const response = await apiInstance.post("/file/createFile", data, {
+      
+    });
+    console.log("File created:", response);
+    return response;
+  } catch (error) {
+    console.error("Create file error:", error);
+    throw error.response ? error.response.data : new Error(error.message);
+  }
+};
+
+
+
+

@@ -34,7 +34,7 @@ app.use(LostErrorHandler);
 app.use(AppErrorHandler);
 // Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error(err);
   res.status(500).json({ message: "Internal Server Error" });
 });
 
