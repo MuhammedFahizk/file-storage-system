@@ -3,11 +3,11 @@
 import React from "react";
 import Link from "next/link";
 
-import Top from "../Login/Top";
 import Signup from "./SignUpForm";
 import Div from "../components/common/Div";
 import Text from "../components/common/Text";
 import withPublic from "../Utils/withPublic";
+import Top from "./Top";
 
 const LeftSide = () => {
   return (
