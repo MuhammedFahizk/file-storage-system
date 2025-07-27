@@ -61,6 +61,7 @@ export const getFolderItems = async (req, res, next) => {
     console.log(req.params, req.query);
 
     const folderId = req.query.folderId || null;
+    
     const { filter } = req.query;
 
     const files = await File.find({

@@ -29,6 +29,7 @@ export function Profile() {
 
   return (
     <Dropdown
+    className="z-50"
       label=""
       dismissOnClick={false}
       renderTrigger={() => (

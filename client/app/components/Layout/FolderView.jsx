@@ -8,6 +8,7 @@ import { FileItem } from "../common/FileItem";
 import { FolderItem } from "../common/FolderItem";
 import { CreateButton } from "../common/CreateButton";
 import { FilterBox } from "../common/FilterBox";
+import { Empty } from "../ui/Empty";
 
 export const FolderView = ({ folderId: propFolderId }) => {
   const params = useParams();
@@ -56,8 +57,8 @@ export const FolderView = ({ folderId: propFolderId }) => {
 
   return (
     <Div className="p-4 max-h-[calc(100vh-150px)] overflow-y-scroll">
-      <Div className={"flex justify-between w-full"}>
-        <h1 className="text-2xl font-bold mb-4">Folder View</h1>
+      <Div className={"flex justify-between w-full items-center  h-full  "}>
+        <h1 className="text-2xl font-bold ">Folder View</h1>
         <FilterBox filter={filter} setFilter={setFilter} />
       </Div>
       <CreateButton onCreateSuccess={fetchItems} />
@@ -67,7 +68,7 @@ export const FolderView = ({ folderId: propFolderId }) => {
       ) : error ? (
         <p className="text-red-500">Error: {error}</p>
       ) : items.length === 0 ? (
-        <p>This folder is empty.</p>
+        <Empty/>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {items.map((item) =>

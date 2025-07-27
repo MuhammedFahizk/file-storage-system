@@ -1,14 +1,15 @@
 "use client";
 
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Input, notification, Form } from "antd";
 import { MdAlternateEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 
-import { loginUser } from '../services/postApi';
-import { useRouter } from 'next/navigation';
-import { setAccessToken } from '../Redux/feathers/auth';
+import { loginUser } from "../services/postApi";
+import { useRouter } from "next/navigation";
+import { setAccessToken } from "../Redux/feathers/auth";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -32,12 +33,23 @@ const LoginForm = () => {
         description: "You have logged in successfully.",
       });
 
-      router.push('/');
+      toast.success(
+        <div>
+          <strong>Login Successful</strong>
+          <div>You have been successfully logged in.</div>
+        </div>
+      );
+
+      router.push("/");
     } catch (error) {
-      notification.error({
-        message: "Login Failed",
-        description: error?.response?.data?.message || "Something went wrong.",
-      });
+      console.log(error);
+      
+      toast.error(
+        <div>
+          <strong>Login Failed</strong>
+          <div>{error?.message || "Something went wrong."}</div>
+        </div>
+      );
     }
   };
 

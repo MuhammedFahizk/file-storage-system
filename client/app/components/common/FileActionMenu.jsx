@@ -4,11 +4,12 @@ import { Dropdown, DropdownItem } from "flowbite-react";
 import { RenameModal } from "./RenameModal";
 import { renameFile, renameFolder } from "@/app/services/patchApi";
 import { Download } from "./Download";
-import { Trash } from "./ConfirmationModal";
-import { LiaPencilAltSolid } from "react-icons/lia";
 import { deleteFile, deleteFolder } from "@/app/services/deleteApi";
 import { ConfirmationModal } from "./ConfirmationModal";
+import { LiaPencilAltSolid } from "react-icons/lia";
 import { GoTrash } from "react-icons/go";
+import { toast } from "react-toastify";
+
 export const FileActionsMenu = ({ item, setData, onRename, onDelete }) => {
   const [openRenameModal, setOpenRenameModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -17,7 +18,7 @@ export const FileActionsMenu = ({ item, setData, onRename, onDelete }) => {
 
   const handleRenameConfirm = async () => {
     if (!newName.trim()) {
-      alert("Name  cannot be empty.");
+      toast.error("Name cannot be empty.");
       return;
     }
 
@@ -28,13 +29,24 @@ export const FileActionsMenu = ({ item, setData, onRename, onDelete }) => {
       } else {
         await renameFolder({ folderId: item._id, newName });
       }
+
+      toast.success(
+        <div>
+          <strong>Renamed Successfully</strong>
+          <div>“{item.name}” is now “{newName}”.</div>
+        </div>
+      );
+
       onRename(item._id, newName);
-
-
       setOpenRenameModal(false);
     } catch (err) {
       console.error("Rename error:", err);
-      alert(err?.message || "Failed to rename the file.");
+      toast.error(
+        <div>
+          <strong>Rename Failed</strong>
+          <div>{err?.message || "Could not rename the item."}</div>
+        </div>
+      );
     } finally {
       setLoading(false);
     }
@@ -47,12 +59,25 @@ export const FileActionsMenu = ({ item, setData, onRename, onDelete }) => {
         await deleteFile({ fileId: item._id });
       } else {
         await deleteFolder({ folderId: item._id });
-      } // implement this API
-      onDelete(item._id)
+      }
+
+      toast.success(
+        <div>
+          <strong>Deleted Successfully</strong>
+          <div>“{item.name}” has been removed.</div>
+        </div>
+      );
+
+      onDelete(item._id);
       setOpenDeleteModal(false);
     } catch (err) {
       console.error("Delete error:", err);
-      alert(err?.message || "Failed to delete the file.");
+      toast.error(
+        <div>
+          <strong>Delete Failed</strong>
+          <div>{err?.message || "Could not delete the item."}</div>
+        </div>
+      );
     } finally {
       setLoading(false);
     }
@@ -74,14 +99,12 @@ export const FileActionsMenu = ({ item, setData, onRename, onDelete }) => {
 
         <DropdownItem onClick={() => setOpenRenameModal(true)}>
           <LiaPencilAltSolid className="mr-2" />
+          Rename
         </DropdownItem>
 
-        {/* <DropdownItem onClick={() => console.log('Star:', item.name)}>
-          Star
-        </DropdownItem> */}
-
         <DropdownItem onClick={() => setOpenDeleteModal(true)}>
-          <GoTrash />
+          <GoTrash className="mr-2" />
+          Delete
         </DropdownItem>
       </Dropdown>
 

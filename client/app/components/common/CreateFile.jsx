@@ -7,56 +7,66 @@ import { ButtonComponent } from "./ButtonComponent";
 import { SelectedFile } from "./SelectedFile";
 import { createFile } from "@/app/services/postApi";
 import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 export const CreateFile = ({ openModal, setOpenModal, onCreateSuccess }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
 
-    const { folderId } = useParams();
-  
+  const { folderId } = useParams();
 
   const handleCancel = () => {
     setSelectedFiles([]);
     setOpenModal(false);
   };
 
-const handleSubmit = async () => {
+  const handleSubmit = async () => {
     if (selectedFiles.length === 0) {
-        alert("Please select at least one file to upload.");
-        return;
+      toast.error(
+        "Please select at least one file to upload.",
+      )
+      return;
     }
     console.log("selectedFiles", selectedFiles);
 
     const formData = new FormData();
     // Iterate over each selected file and append it to the FormData object
     selectedFiles.forEach((file) => {
-        formData.append("files", file, file.name);
+      formData.append("files", file, file.name);
     });
 
     console.log("FormData content (for debugging):");
     // You can't directly console.log FormData content,
     // but you can iterate and log its entries
     for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
+      console.log(`${key}:`, value);
     }
 
-
-    console.log("Files uploaded:", formData );
+    console.log("Files uploaded:", formData);
     try {
-        setLoading(true);
-        formData.append("folderId", folderId )
-        const response = await createFile(formData);
-        console.log("Files uploaded:", formData, response.data);
-        handleCancel(); // reset state
+      setLoading(true);
+      formData.append("folderId", folderId);
+      const response = await createFile(formData);
+      toast.success(
+        <div>
+          <strong>{ response?.message||'File Uploaded'}</strong>
+          <div>Your file has been uploaded successfully.</div>
+        </div>
+      );
+      handleCancel(); // reset state
     } catch (err) {
-        console.error("Upload failed:", err);
-        alert(err?.response?.data?.message || "Failed to upload files");
+      console.error("Upload failed:", err);
+      toast.error(
+      <div>
+        <strong>Upload Failed</strong>
+        <div>{  err?.message ||  err?.response?.data?.message || "Something went wrong while uploading the file."}</div>
+      </div>
+    );
     } finally {
-onCreateSuccess()
-        setLoading(false);
-        
+      onCreateSuccess();
+      setLoading(false);
     }
-};
+  };
 
   const handleFileChange = (e) => {
     console.log(e.target.files[0]);
@@ -99,15 +109,15 @@ onCreateSuccess()
               Supported: SVG, PNG, JPG, PDF, etc.
             </p>
           </div>
-         <form  >
-             <FileInput
-            id="dropzone-file"
-            className="hidden"
-            name="files"
-            onChange={handleFileChange}
-            multiple
-          />
-         </form>
+          <form>
+            <FileInput
+              id="dropzone-file"
+              className="hidden"
+              name="files"
+              onChange={handleFileChange}
+              multiple
+            />
+          </form>
         </Label>
 
         {selectedFiles.length > 0 && (

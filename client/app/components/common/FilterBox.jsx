@@ -13,7 +13,7 @@ export const FilterBox = ({ filter, setFilter }) => {
 
   return (
     <Div className="relative group w-fit">
-      <button className="bg-white shadow-lg p-2 ms-3 px-6 border top-1 rounded-md cursor-pointer z-10 relative">
+      <button className="bg-white shadow-lg p-2 ms-3 px-6 border  rounded-md cursor-pointer z-10 relative">
         Filter
       </button>
 

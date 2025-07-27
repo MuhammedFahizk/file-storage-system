@@ -18,7 +18,7 @@ export const createFile = async (req, res, next) => {
     console.log(req.body);
 
     const userId = req.userId;
-    const folderId = req.body.folderId;
+    const {folderId} = req.body;
     console.log(req.files);
     console.log(req.userId);
 
@@ -73,12 +73,9 @@ export const createFile = async (req, res, next) => {
         size: file.size,
         type: fileType,
         userId: userId,
-        
+        parentId: isValidObjectId(folderId) ? new ObjectId(folderId) : null,
       });
 
-      if (isValidObjectId(folderId)) {
-        newFileData.parentId = new ObjectId(folderId);
-      }
       uploadedFilesData.push(newFile);
 
       await fs.unlink(file.path, (err) => {

@@ -6,6 +6,7 @@ import Div from "./Div";
 import { ButtonComponent } from "./ButtonComponent";
 import { createFolder } from "@/app/services/postApi";
 import { useParams } from "next/navigation";
+ import { toast } from "react-toastify";
 
 export const CreteFolder = ({ openModal, setOpenModal, onCreateSuccess }) => {
   const [folderName, setFolderName] = useState("");
@@ -18,29 +19,48 @@ export const CreteFolder = ({ openModal, setOpenModal, onCreateSuccess }) => {
     setOpenModal(false);
   };
 
-  const handleCreate = async () => {
-    if (!folderName.trim()) {
-      alert("Folder name cannot be empty");
-      return;
-    }
 
-    try {
-      setLoading(true);
-      const response = await createFolder({
-        name: folderName,
-        folderId: folderId,
-      });
-      console.log("Folder created:", response.data);
-    } catch (err) {
-      console.error("Error creating folder:", err);
-      alert(err.message || "Failed to create folder");
-    } finally {
-      setLoading(false);
-      setFolderName("");
-      setOpenModal(false);
-      onCreateSuccess()
-    }
-  };
+const handleCreate = async () => {
+  if (!folderName.trim()) {
+    toast.warn("Folder name cannot be empty");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const response = await createFolder({
+      name: folderName,
+      folderId: folderId,
+    });
+
+    console.log("Folder created:", response.data);
+
+    toast.success(
+      <div>
+        <strong>Folder Created</strong>
+        <div>Your new folder has been created successfully.</div>
+      </div>
+    );
+
+    // Optional: if you want to reset only on success
+    setFolderName("");
+    setOpenModal(false);
+    onCreateSuccess();
+  } catch (err) {
+    console.error("Error creating folder:", err);
+
+    toast.error(
+      <div>
+        <strong>Creation Failed</strong>
+        <div>{err?.response?.data?.message || err.message || "Something went wrong while creating the folder."}</div>
+      </div>
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <Modal

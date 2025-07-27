@@ -1,9 +1,10 @@
-"use client"
+"use client";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { signupUser } from "../services/postApi";
 import { setAccessToken } from "../Redux/feathers/auth";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -15,14 +16,27 @@ const Signup = () => {
   } = useForm();
 
   const onFinish = async (data) => {
-    try {
-      const response = await signupUser(data);
-      const { accessToken } = response;
-      dispatch(setAccessToken(accessToken));
-      alert("Signup successful!");
-    } catch (error) {
-      alert("Signup failed: " + error.message);
-    }
+   try {
+  const response = await signupUser(data);
+  const { accessToken } = response;
+
+  dispatch(setAccessToken(accessToken));
+
+  toast.success(
+    <div>
+      <strong>Signup Successful</strong>
+      <div>Your account has been created successfully.</div>
+    </div>
+  );
+} catch (error) {
+  toast.error(
+    <div>
+      <strong>Signup Failed</strong>
+      <div>{error?.message || "Something went wrong during signup."}</div>
+    </div>
+  );
+}
+
   };
 
   return (
@@ -58,9 +72,7 @@ const Signup = () => {
           )}
         />
         {errors.username && (
-          <p className="text-red-500 text-sm mt-1">
-            {errors.username.message}
-          </p>
+          <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
         )}
       </div>
 
@@ -124,9 +136,7 @@ const Signup = () => {
           )}
         />
         {errors.password && (
-          <p className="text-red-500 text-sm mt-1">
-            {errors.password.message}
-          </p>
+          <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
         )}
       </div>
 
