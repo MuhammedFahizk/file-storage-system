@@ -12,7 +12,9 @@ export const loginUser = async (data) => {
  
 
   try {
-    const response = await apiInstance.post("/login", data);
+    const response = await apiInstance.post("/login", data, {
+      withCredentials : true
+    });
     console.log(response);
     return response;
   } catch (error) {
