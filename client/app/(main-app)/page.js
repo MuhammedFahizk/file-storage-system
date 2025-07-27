@@ -17,7 +17,7 @@ const Home = () => {
   const loading = useSelector((state) => state.user.loading);
   const error = useSelector((state) => state.user.error);
 
-  console.log(profile.username);
+  // console.log(profile.username);
   
   if (loading) {
     return <div>Loading...</div>;
