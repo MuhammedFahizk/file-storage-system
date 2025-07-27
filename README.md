@@ -108,6 +108,11 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
 | `PATCH`  | `/api/users/:fileId/renameFile` | Rename a file by ID      |
 | `DELETE` | `/api/users/:fileId/deleteFile` | Delete a file by ID      |
 
+🚀 Deployment
+Demo:https://file-storage-system-labz.vercel.app/
+
+
+Backend:https://file-storage-system-au4c.onrender.com
 
 
 🔧 Run the App Locally
