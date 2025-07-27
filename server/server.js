@@ -32,13 +32,11 @@ app.all("*", function (req, res, next) {
 });
 app.use(LostErrorHandler);
 app.use(AppErrorHandler);
-// Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ message: "Internal Server Error" });
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

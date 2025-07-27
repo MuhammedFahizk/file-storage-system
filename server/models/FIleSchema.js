@@ -23,7 +23,7 @@ const FileSchema = new Schema({
     ref: 'User',
     required: true
   },
-  parent: {
+  parentId: {
     type: Schema.Types.ObjectId,
     ref: 'Folder', 
     default: null
