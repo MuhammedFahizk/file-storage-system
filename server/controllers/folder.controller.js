@@ -1,6 +1,7 @@
 import CustomError from "../config/errors/CustomError.js";
 import { File } from "../models/FIleSchema.js";
 import { Folder } from "../models/FolderSchema.js";
+import { ObjectId } from 'mongodb';
 
 /*
  * 1.This function is used to create a new folder.
@@ -11,7 +12,7 @@ import { Folder } from "../models/FolderSchema.js";
 export const createFolder = async (req, res, next) => {
   try {
     const userId = req.userId;
-    const { name, parentId } = req.body;
+    const { name, folderId } = req.body;
 
     if (!name) {
       throw new CustomError(
@@ -21,7 +22,7 @@ export const createFolder = async (req, res, next) => {
       );
     }
 
-    const existing = await Folder.findOne({ name, parentId, userId });
+    const existing = await Folder.findOne({ name, parentId: folderId ? new ObjectId(folderId) : null , userId });
     if (existing) {
       throw new CustomError(
         "Duplicate folder",
@@ -30,7 +31,11 @@ export const createFolder = async (req, res, next) => {
       );
     }
 
-    const folder = await Folder.create({ name, parentId, userId });
+     const folder = await Folder.create({
+      name,
+      parentId: folderId ? new ObjectId(folderId) : null,
+      userId,
+    });
 
     res.status(201).json({
       message: "Folder created successfully",

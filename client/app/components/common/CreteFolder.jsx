@@ -5,11 +5,14 @@ import React, { useState } from 'react';
 import Div from './Div';
 import { ButtonComponent } from './ButtonComponent';
 import { createFolder } from '@/app/services/postApi';
+import { useParams } from 'next/navigation';
 
 export const CreteFolder = ({ openModal, setOpenModal }) => {
   const [folderName, setFolderName] = useState('');
   const [loading, setLoading] = useState(false);
 
+      const { folderId } = useParams();
+  
   const handleCancel = () => {
     setFolderName('');
     setOpenModal(false);
@@ -23,7 +26,7 @@ export const CreteFolder = ({ openModal, setOpenModal }) => {
 
     try {
       setLoading(true);
-      const response = await createFolder({ name: folderName });
+      const response = await createFolder({ name: folderName, folderId: folderId });
       console.log('Folder created:', response.data);
       // TODO: Optional: toast or refresh folder list
     } catch (err) {

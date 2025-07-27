@@ -6,6 +6,7 @@ import Div from "../common/Div";
 import { getFolderItem } from "@/app/services/getApi";
 import { FileItem } from "../common/FileItem";
 import { FolderItem } from "../common/FolderItem";
+import { CreateButton } from "../common/CreateButton";
 
 export const FolderView = ({ folderId: propFolderId }) => {
   const params = useParams();
@@ -39,7 +40,8 @@ const validFolderId = folderId === "null" ? null : folderId;
   return (
     <Div className="p-4 max-h-[calc(100vh-150px)] overflow-y-scroll">
       <h1 className="text-2xl font-bold mb-4">Folder View</h1>
-
+        <CreateButton/>
+    
       {loading ? (
         <p>Loading items...</p>
       ) : error ? (

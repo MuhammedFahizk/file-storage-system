@@ -15,10 +15,10 @@ It then uses the file object to create a new file in the database.
 export const createFile = async (req, res, next) => {
   try {
     const files = req.files;
-    console.log(req);
+    console.log(req.body);
 
     const userId = req.userId;
-    const { parentId } = req.body;
+   const folderId = req.body.folderId
     console.log(req.files);
     console.log(req.userId);
 
@@ -49,7 +49,7 @@ export const createFile = async (req, res, next) => {
 
       const existing = await File.findOne({
         name: file.originalname,
-        parentId: parentId || null,
+        parentId: new ObjectId(folderId) || null,
         userId,
       });
 
@@ -58,8 +58,7 @@ export const createFile = async (req, res, next) => {
           "File already exists",
           409,
           "A file with this name already exists in this folder."
-        );
-        continue;
+        )
       }
       console.log(file);
 
@@ -71,7 +70,7 @@ export const createFile = async (req, res, next) => {
         size: file.size,
         type: fileType,
         userId: userId,
-        parent: parentId || null,
+        parentId: folderId ,
       });
       uploadedFilesData.push(newFile);
 

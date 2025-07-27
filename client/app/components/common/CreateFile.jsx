@@ -6,10 +6,14 @@ import Div from "./Div";
 import { ButtonComponent } from "./ButtonComponent";
 import { SelectedFile } from "./SelectedFile";
 import { createFile } from "@/app/services/postApi";
+import { useParams } from "next/navigation";
 
 export const CreateFile = ({ openModal, setOpenModal }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+
+    const { folderId } = useParams();
+  
 
   const handleCancel = () => {
     setSelectedFiles([]);
@@ -40,7 +44,7 @@ const handleSubmit = async () => {
     console.log("Files uploaded:", formData );
     try {
         setLoading(true);
-
+        formData.append("folderId", folderId )
         const response = await createFile(formData);
         console.log("Files uploaded:", formData, response.data);
         handleCancel(); // reset state

@@ -30,7 +30,6 @@ const Home = () => {
   return (
     // <Card profile={profile} />
    <Div>
-    <CreateButton/>
     <FolderView/>
    </Div>
   );
