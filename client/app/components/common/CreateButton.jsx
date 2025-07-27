@@ -8,7 +8,7 @@ import { PiFolderThin } from "react-icons/pi";
 import { CreteFolder } from './CreteFolder';
 import { CreateFile } from './CreateFile';
 
-export const CreateButton = () => {
+export const CreateButton = ({onCreateSuccess}) => {
   const [openFolderModal, setOpenFolderModal] = useState(false);
   const [openFileModal, setOpenFileModal] = useState(false);
 
@@ -36,10 +36,10 @@ export const CreateButton = () => {
       </div>
 
       {/* Folder Modal */}
-      <CreteFolder openModal={openFolderModal} setOpenModal={setOpenFolderModal} />
+      <CreteFolder onCreateSuccess={onCreateSuccess} openModal={openFolderModal} setOpenModal={setOpenFolderModal} />
 
       {/* File Modal */}
-      <CreateFile openModal={openFileModal} setOpenModal={setOpenFileModal} />
+      <CreateFile onCreateSuccess={onCreateSuccess} onCreateSuccess={onCreateSuccess} openModal={openFileModal} setOpenModal={setOpenFileModal} />
     </Div>
   );
 };

@@ -1,5 +1,6 @@
 import cloudinary from 'cloudinary';
 import { ObjectId } from 'mongodb';
+import CustomError from '../config/errors/CustomError.js';
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -16,6 +17,10 @@ export const uploadImageCloudinary = async (file) => {
     return result;
   } catch (error) {
     console.error(error);
-    throw new Error(`Failed to upload image: ${error.message}`);
+    throw new CustomError(
+      'Error uploading image to Cloudinary',
+      400,
+      error.message,
+    );
   }
 };

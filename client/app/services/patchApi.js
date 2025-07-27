@@ -33,3 +33,22 @@ export const renameFile = async ({ fileId, newName }) => {
     throw error.response ? error.response.data : new Error(error.message);
   }
 };
+
+
+
+/**
+ * 2.Rename file
+ * @param {Object} data - Should include `fileId` and `newName`
+ * @returns {Promise} - API response
+ */
+export const renameFolder = async ({ folderId, newName }) => {
+  try {
+    const response = await apiInstance.patch(`/folder/${folderId}/renameFolder`, {
+      newName: newName,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error renaming file:", error);
+    throw error.response ? error.response.data : new Error(error.message);
+  }
+};

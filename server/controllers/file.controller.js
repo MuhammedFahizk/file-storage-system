@@ -3,7 +3,7 @@ import { File } from "../models/FIleSchema.js";
 import { deleteImageCloudinary } from "../utils/deleteImageCloudinary.js";
 import { uploadImageCloudinary } from "../utils/uploadToCloudnery.js";
 import fs from "fs/promises";
-import { ObjectId } from 'mongodb';
+import { ObjectId } from "mongodb";
 
 /* 
 1.
@@ -18,7 +18,7 @@ export const createFile = async (req, res, next) => {
     console.log(req.body);
 
     const userId = req.userId;
-   const folderId = req.body.folderId
+    const folderId = req.body.folderId;
     console.log(req.files);
     console.log(req.userId);
 
@@ -47,9 +47,12 @@ export const createFile = async (req, res, next) => {
         continue;
       }
 
+      const isValidObjectId = (id) =>
+        typeof id === "string" && /^[0-9a-fA-F]{24}$/.test(id);
+
       const existing = await File.findOne({
         name: file.originalname,
-        parentId: new ObjectId(folderId) || null,
+        parentId: isValidObjectId(folderId) ? new ObjectId(folderId) : null,
         userId,
       });
 
@@ -58,7 +61,7 @@ export const createFile = async (req, res, next) => {
           "File already exists",
           409,
           "A file with this name already exists in this folder."
-        )
+        );
       }
       console.log(file);
 
@@ -70,8 +73,12 @@ export const createFile = async (req, res, next) => {
         size: file.size,
         type: fileType,
         userId: userId,
-        parentId: folderId ,
+        
       });
+
+      if (isValidObjectId(folderId)) {
+        newFileData.parentId = new ObjectId(folderId);
+      }
       uploadedFilesData.push(newFile);
 
       await fs.unlink(file.path, (err) => {
@@ -98,7 +105,7 @@ export const createFile = async (req, res, next) => {
 };
 
 /* 2.
- * this function use for rename the file naem
+ * this function use for rename the file name
  * @param {Object} req
  * @param {Object} res
  * @param {Object} next
@@ -109,8 +116,6 @@ export const renameFile = async (req, res, next) => {
     const userId = req.userId;
     const { newName } = req.body;
 
-    
-
     if (!newName || typeof newName !== "string") {
       throw new CustomError(
         "Invalid name",
@@ -120,7 +125,6 @@ export const renameFile = async (req, res, next) => {
     }
 
     const file = await File.findOne({ _id: new ObjectId(fileId) });
-    
 
     if (!file) {
       throw new CustomError(

@@ -7,6 +7,7 @@ import { getFolderItem } from "@/app/services/getApi";
 import { FileItem } from "../common/FileItem";
 import { FolderItem } from "../common/FolderItem";
 import { CreateButton } from "../common/CreateButton";
+import { FilterBox } from "../common/FilterBox";
 
 export const FolderView = ({ folderId: propFolderId }) => {
   const params = useParams();
@@ -15,33 +16,52 @@ export const FolderView = ({ folderId: propFolderId }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-const validFolderId = folderId === "null" ? null : folderId;
+  const validFolderId = folderId === "null" ? null : folderId;
+  const [filter, setFilter] = useState([]);
+
+  const fetchItems = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await getFolderItem({
+        folderId: validFolderId,
+        filter,
+      });
+      setItems(response.items);
+    } catch (err) {
+      console.error("Error fetching folder items:", err);
+      setError(err?.response?.data?.message || "Failed to load folder items.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRename = (id, newName) => {
+    setItems((prev) =>
+      prev.map((folder) =>
+        folder._id === id ? { ...folder, name: newName } : folder
+      )
+    );
+  };
+
+  const handleDelete = (id) => {
+  setItems((prev) => prev.filter((item) => item._id !== id));
+};
+
+
   useEffect(() => {
-    const fetchItems = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await getFolderItem(folderId); 
-        setItems(response.items);
-      } catch (err) {
-        console.error("Error fetching folder items:", err);
-        setError(
-          err?.response?.data?.message || "Failed to load folder items."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchItems();
-  }, [validFolderId]);
+  }, [validFolderId, filter]);
 
   return (
     <Div className="p-4 max-h-[calc(100vh-150px)] overflow-y-scroll">
-      <h1 className="text-2xl font-bold mb-4">Folder View</h1>
-        <CreateButton/>
-    
+      <Div className={"flex justify-between w-full"}>
+        <h1 className="text-2xl font-bold mb-4">Folder View</h1>
+        <FilterBox filter={filter} setFilter={setFilter} />
+      </Div>
+      <CreateButton onCreateSuccess={fetchItems} />
+
       {loading ? (
         <p>Loading items...</p>
       ) : error ? (
@@ -52,9 +72,9 @@ const validFolderId = folderId === "null" ? null : folderId;
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {items.map((item) =>
             item.itemType === "file" ? (
-              <FileItem key={item.id} item={item} />
+              <FileItem key={item.id} item={item} onDelete={handleDelete} onRename={handleRename} />
             ) : (
-              <FolderItem key={item.id} item={item} />
+              <FolderItem key={item.id} onRename={handleRename} onDelete={handleDelete} item={item} />
             )
           )}
         </div>

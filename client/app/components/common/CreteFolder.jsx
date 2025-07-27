@@ -1,41 +1,44 @@
-'use client';
+"use client";
 
-import { Modal, ModalBody } from 'flowbite-react';
-import React, { useState } from 'react';
-import Div from './Div';
-import { ButtonComponent } from './ButtonComponent';
-import { createFolder } from '@/app/services/postApi';
-import { useParams } from 'next/navigation';
+import { Modal, ModalBody } from "flowbite-react";
+import React, { useState } from "react";
+import Div from "./Div";
+import { ButtonComponent } from "./ButtonComponent";
+import { createFolder } from "@/app/services/postApi";
+import { useParams } from "next/navigation";
 
-export const CreteFolder = ({ openModal, setOpenModal }) => {
-  const [folderName, setFolderName] = useState('');
+export const CreteFolder = ({ openModal, setOpenModal, onCreateSuccess }) => {
+  const [folderName, setFolderName] = useState("");
   const [loading, setLoading] = useState(false);
 
-      const { folderId } = useParams();
-  
+  const { folderId } = useParams();
+
   const handleCancel = () => {
-    setFolderName('');
+    setFolderName("");
     setOpenModal(false);
   };
 
   const handleCreate = async () => {
     if (!folderName.trim()) {
-      alert('Folder name cannot be empty');
+      alert("Folder name cannot be empty");
       return;
     }
 
     try {
       setLoading(true);
-      const response = await createFolder({ name: folderName, folderId: folderId });
-      console.log('Folder created:', response.data);
-      // TODO: Optional: toast or refresh folder list
+      const response = await createFolder({
+        name: folderName,
+        folderId: folderId,
+      });
+      console.log("Folder created:", response.data);
     } catch (err) {
-      console.error('Error creating folder:', err);
-      alert(err.message || 'Failed to create folder');
+      console.error("Error creating folder:", err);
+      alert(err.message || "Failed to create folder");
     } finally {
       setLoading(false);
-      setFolderName('');
+      setFolderName("");
       setOpenModal(false);
+      onCreateSuccess()
     }
   };
 
@@ -58,11 +61,9 @@ export const CreteFolder = ({ openModal, setOpenModal }) => {
             className="w-full p-3 border rounded"
           />
           <div className="flex justify-end gap-4">
-            <ButtonComponent onClick={handleCancel}>
-              Cancel
-            </ButtonComponent>
+            <ButtonComponent onClick={handleCancel}>Cancel</ButtonComponent>
             <ButtonComponent onClick={handleCreate} disabled={loading}>
-              {loading ? 'Creating...' : 'Create'}
+              {loading ? "Creating..." : "Create"}
             </ButtonComponent>
           </div>
         </Div>

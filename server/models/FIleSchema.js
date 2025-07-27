@@ -12,7 +12,19 @@ const FileSchema = new Schema({
   },
   type: {
     type: String,
-    enum: ['image', 'video', 'pdf'],
+    enum: [
+    'image',
+    'video',
+    'pdf',
+    'docs',
+    'sheet',
+    'ppt',
+    'text',
+    'audio',
+    'zip',
+    'code',
+    'other'
+  ],
     required: true
   },
   size: {

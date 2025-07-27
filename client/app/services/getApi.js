@@ -18,11 +18,14 @@ export const getProfile = async () => {
  * Fetch folder Items
  * @returns {Promise<object>} - User folder data with folder Id
  */
-export const getFolderItem = async (folderId) => {
+export const getFolderItem = async ({ folderId, filter }) => {
   try {
-    const response = await apiInstance.get("/folder/folderItem", {
-      params: folderId ? { folderId } : {},
-    });
+ const params = {
+    ...(folderId ? { folderId } : {}),
+    ...(filter?.length ? { filter } : {})
+  };
+
+  const response = await apiInstance.get("/folder/folderItem", { params });
     return response.data;
   } catch (error) {
     console.error("Error fetching folder items:", error);

@@ -14,5 +14,11 @@ router.post("/createFolder", requireAuthentication, folderController.createFolde
 
 router.get("/folderItem", requireAuthentication, folderController.getFolderItems)
 
+router.patch("/:folderId/renameFolder",requireAuthentication, folderController.renameFolder )
+
+router.delete("/:folderId/deleteFolder", requireAuthentication, folderController.deleteFolder)
+
+
+
 
 export default router;

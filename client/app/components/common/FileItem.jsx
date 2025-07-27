@@ -9,7 +9,7 @@ import { FileActionsMenu } from "./FileActionMenu"; // Assuming this is correctl
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "flowbite-react"; // Import Modal from Flowbite
 import { ButtonComponent } from "./ButtonComponent";
 
-export const FileItem = ({ item }) => {
+export const FileItem = ({ item, onRename, onDelete }) => {
   // State to control modal visibility
   const [showModal, setShowModal] = useState(false);
 
@@ -42,11 +42,10 @@ export const FileItem = ({ item }) => {
                  group hover:shadow-lg transition-shadow duration-200 relative"
     >
       <div className="absolute top-2 right-2 z-10">
-        <FileActionsMenu item={item} />
+        <FileActionsMenu onRename={onRename} onDelete={onDelete} item={item} />
       </div>
 
-      {/* Content area that triggers the modal */}
-      {/* Removed Link and added onClick to the div for modal opening */}
+    
       <div
         className="block w-full h-full cursor-pointer"
         onClick={handleItemClick}
@@ -80,7 +79,6 @@ export const FileItem = ({ item }) => {
         )}
       </div>
 
-      {/* Flowbite Modal Component */}
       <Modal
         show={showModal}
         size="large"
@@ -100,11 +98,7 @@ export const FileItem = ({ item }) => {
                 Open in New Tab
               </a>
             )}
-            <ButtonComponent
-              onClick={handleCloseModal}
-            >
-              Close
-            </ButtonComponent>
+            <ButtonComponent onClick={handleCloseModal}>Close</ButtonComponent>
           </Div>
 
           {/* Main preview content */}
@@ -142,8 +136,6 @@ export const FileItem = ({ item }) => {
             )}
           </div>
         </ModalBody>
-
-       
       </Modal>
     </Div>
   );

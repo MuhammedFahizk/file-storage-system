@@ -1,34 +1,40 @@
-import React, { useState } from 'react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { Dropdown, DropdownItem } from 'flowbite-react';
-import { RenameModal } from './RenameModal';
-import { renameFile } from '@/app/services/patchApi';
-import { Download } from './Download';
-import { Trash } from './ConfirmationModal';
-import { LiaPencilAltSolid } from 'react-icons/lia';
-import { deleteFile } from '@/app/services/deleteApi';
-import { ConfirmationModal } from './ConfirmationModal';
+import React, { useState } from "react";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { Dropdown, DropdownItem } from "flowbite-react";
+import { RenameModal } from "./RenameModal";
+import { renameFile, renameFolder } from "@/app/services/patchApi";
+import { Download } from "./Download";
+import { Trash } from "./ConfirmationModal";
+import { LiaPencilAltSolid } from "react-icons/lia";
+import { deleteFile, deleteFolder } from "@/app/services/deleteApi";
+import { ConfirmationModal } from "./ConfirmationModal";
 import { GoTrash } from "react-icons/go";
-
-export const FileActionsMenu = ({ item }) => {
+export const FileActionsMenu = ({ item, setData, onRename, onDelete }) => {
   const [openRenameModal, setOpenRenameModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [newName, setNewName] = useState(item.name || '');
+  const [newName, setNewName] = useState(item.name || "");
   const [loading, setLoading] = useState(false);
 
   const handleRenameConfirm = async () => {
     if (!newName.trim()) {
-      alert('Filename cannot be empty.');
+      alert("Name  cannot be empty.");
       return;
     }
 
     setLoading(true);
     try {
-      await renameFile({ fileId: item._id, newName: newName });
+      if (item.itemType === "file") {
+        await renameFile({ fileId: item._id, newName });
+      } else {
+        await renameFolder({ folderId: item._id, newName });
+      }
+      onRename(item._id, newName);
+
+
       setOpenRenameModal(false);
     } catch (err) {
-      console.error('Rename error:', err);
-      alert(err?.message || 'Failed to rename the file.');
+      console.error("Rename error:", err);
+      alert(err?.message || "Failed to rename the file.");
     } finally {
       setLoading(false);
     }
@@ -37,11 +43,16 @@ export const FileActionsMenu = ({ item }) => {
   const handleDeleteConfirm = async () => {
     setLoading(true);
     try {
-      await deleteFile({fileId:item._id}); // implement this API
+      if (item.itemType === "file") {
+        await deleteFile({ fileId: item._id });
+      } else {
+        await deleteFolder({ folderId: item._id });
+      } // implement this API
+      onDelete(item._id)
       setOpenDeleteModal(false);
     } catch (err) {
-      console.error('Delete error:', err);
-      alert(err?.message || 'Failed to delete the file.');
+      console.error("Delete error:", err);
+      alert(err?.message || "Failed to delete the file.");
     } finally {
       setLoading(false);
     }
@@ -59,10 +70,7 @@ export const FileActionsMenu = ({ item }) => {
         placement="bottom-end"
         inline
       >
-        {item.itemType === "file" &&  (
-        <Download item={item} />
-
-        )}
+        {item.itemType === "file" && <Download item={item} />}
 
         <DropdownItem onClick={() => setOpenRenameModal(true)}>
           <LiaPencilAltSolid className="mr-2" />

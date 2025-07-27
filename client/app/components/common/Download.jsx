@@ -19,7 +19,7 @@ export const Download = ({ item }) => {
   return (
     <DropdownItem onClick={handleDownload} className="flex items-center gap-2">
       <IoCloudDownloadOutline />
-      Download
+      
     </DropdownItem>
   );
 };

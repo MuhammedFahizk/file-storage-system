@@ -8,7 +8,7 @@ import { SelectedFile } from "./SelectedFile";
 import { createFile } from "@/app/services/postApi";
 import { useParams } from "next/navigation";
 
-export const CreateFile = ({ openModal, setOpenModal }) => {
+export const CreateFile = ({ openModal, setOpenModal, onCreateSuccess }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -52,7 +52,9 @@ const handleSubmit = async () => {
         console.error("Upload failed:", err);
         alert(err?.response?.data?.message || "Failed to upload files");
     } finally {
+onCreateSuccess()
         setLoading(false);
+        
     }
 };
 

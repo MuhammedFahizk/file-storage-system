@@ -2,8 +2,10 @@ import Link from "next/link";
 import Div from "./Div";
 import { FileActionsMenu } from "./FileActionMenu";
 import { BsFillFolderFill } from "react-icons/bs";
+import { useState } from "react";
 
-export const FolderItem = ({ item,  }) => {
+export const FolderItem = ({ item, onRename,onDelete }) => {
+  const [data, setData] = useState(item)
   return (
     <Div
       className="overflow-hidden w-full bg-ternary p-4 rounded-xl
@@ -11,8 +13,7 @@ export const FolderItem = ({ item,  }) => {
     //   onClick={() => onFolderClick(item)} // Keep folder clickable for navigation
     >
       <div className="absolute top-2 right-2 z-10">
-        {/* Use FileActionsMenu for consistency, but you might customize actions for folders */}
-        <FileActionsMenu item={item} />
+        <FileActionsMenu onRename={onRename} onDelete={onDelete}  item={item} />
       </div>
 
       <div className="flex items-center space-x-3">
